@@ -166,11 +166,18 @@ zika_new$idade_mae <-
 zika_new$ano_nasc_filho <- as.factor(zika_new$ano_nasc_filho)
 zika_new$mes_nasc_filho <- as.factor(zika_new$mes_nasc_filho)
 
-zika_new$peso_filho <- cut(
-  zika_new$peso_filho, 
-  hist(zika_new$peso_filho)$breaks,
-  dig.lab = 10 
-)
+zika_new$peso_filho <- 
+  ordered(
+    cut(
+      zika_new$peso_filho, 
+      c(0, 2500, 3500, 5000)
+    ), 
+    labels = c(
+      "Abaixo do Normal", 
+      "Normal", 
+      "Acima do Normal"
+    )
+  )
 
 zika_new$comprimento_filho <- cut(
   zika_new$comprimento_filho, 
