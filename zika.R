@@ -1,4 +1,3 @@
-setwd("C:\\Users\\Marco\\Google Drive\\Prática\\Identificação de Padrões com Dados do Zika")
 zika_old = read.csv("linkage.csv", header = TRUE, sep = ";", fileEncoding = 'utf-8')
 
 ################################################################################
@@ -141,9 +140,47 @@ zika_new$classificacao_gestacao <- substr(
 zika_new$classificacao_gestacao <- as.factor(zika_new$classificacao_gestacao)
 
 ################################################################################
+# discretizando colunas
+################################################################################
+
+zika_new$idade_mae <- 
+  ordered(
+    cut(
+      zika_new$idade_mae, 
+      c(0, 12, 18, 24, 65)
+    ), 
+    labels = c(
+      "Criança", 
+      "Adolescente", 
+      "Jovem-Adulto", 
+      "Adulto"
+    )
+  )
+
+zika_new$ano_nasc_filho <- as.factor(zika_new$ano_nasc_filho)
+zika_new$mes_nasc_filho <- as.factor(zika_new$mes_nasc_filho)
+
+zika_new$peso_filho <- cut(
+  zika_new$peso_filho, 
+  hist(zika_new$peso_filho)$breaks,
+  dig.lab = 10 
+)
+
+zika_new$comprimento_filho <- cut(
+  zika_new$comprimento_filho, 
+  hist(zika_new$comprimento_filho)$breaks,
+  dig.lab = 10 
+)
+
+zika_new$perimetro_cefalico_filho <- cut(
+  zika_new$perimetro_cefalico_filho, 
+  hist(zika_new$perimetro_cefalico_filho)$breaks,
+  dig.lab = 10 
+)
+
+################################################################################
 # removendo conteúdo temporário
 ################################################################################
 
 rm(zika_old, i)
 str(zika_new)
-boxplot(zika_new)
