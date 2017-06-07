@@ -15,6 +15,7 @@ zika_new <- data.frame(
   zika_old$PESO,
   zika_old$NU_COMPRIMENTO,
   zika_old$NU_PERIMETRO_CEFALICO,
+  zika_old$NU_DIAMETRO_CEFALICO,
   zika_old$TP_CLASSIFICACAO_FETO_RN,
   zika_old$TP_GRAVIDEZ,
   zika_old$TP_CLASSIFICACAO_FINAL,
@@ -40,6 +41,7 @@ colnames(zika_new) = c(
   "peso_filho",
   "comprimento_filho",
   "perimetro_cefalico_filho",
+  "diametro_cefalico_filho",
   "classificacao_feto_gestacao",
   "tipo_gravidez_gestacao",
   "classificacao_gestacao",
@@ -73,6 +75,7 @@ zika_new$mun_mae <- as.factor(zika_new$mun_mae)
 
 zika_new$comprimento_filho <- as.numeric(sub(",", ".", zika_new$comprimento_filho))
 zika_new$perimetro_cefalico_filho <- as.numeric(sub(",", ".", zika_new$perimetro_cefalico_filho))
+zika_new$diametro_cefalico_filho <- as.numeric(sub(",", ".", zika_new$diametro_cefalico_filho))
 
 ################################################################################
 # alguns registros das colunas que representam datas apresentavam inconsistência
@@ -175,6 +178,12 @@ zika_new$comprimento_filho <- cut(
 zika_new$perimetro_cefalico_filho <- cut(
   zika_new$perimetro_cefalico_filho, 
   hist(zika_new$perimetro_cefalico_filho)$breaks,
+  dig.lab = 10 
+)
+
+zika_new$diametro_cefalico_filho <- cut(
+  zika_new$diametro_cefalico_filho, 
+  hist(zika_new$diametro_cefalico_filho)$breaks,
   dig.lab = 10 
 )
 
