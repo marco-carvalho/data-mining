@@ -89,7 +89,7 @@ zika_new$filho.mes_nasc[which(nchar(zika_new$filho.mes_nasc) == 7)] <- paste(
 zika_new$filho.mes_nasc <- as.Date(zika_new$filho.mes_nasc, "%d%m%Y")
 
 ################################################################################
-# pegando a parte do m?s/ano para as respectivas colunas
+# pegando a parte do mês/ano para as respectivas colunas
 ################################################################################
 
 zika_new$filho.ano_nasc <- as.integer(substr(zika_new$filho.ano_nasc, 1, 4))
@@ -136,7 +136,7 @@ zika_new[zika_new == "SEM INFORMACAO"] <- NA
 
 ################################################################################
 # para cada coluna do data.frame
-#   se a coluna for um valor num?rico
+#   se a coluna for um valor numérico
 #     enquanto existir outliers na coluna
 #       seta NA ao valor considerado outlier
 ################################################################################
@@ -170,7 +170,7 @@ zika_new$mae.idade <-
       c(0, 12, 18, 24, 65)
     ), 
     labels = c(
-      "Crian?a", 
+      "Criança", 
       "Adolescente", 
       "Jovem-Adulto", 
       "Adulto"
@@ -208,7 +208,7 @@ zika_new$filho.torax.perimetro <- cut(
 )
 
 ################################################################################
-# removendo conte?do tempor?rio
+# removendo conteúdo temporário
 ################################################################################
 
 zika_new <- droplevels(zika_new)
