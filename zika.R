@@ -213,4 +213,29 @@ zika_new$filho.torax.perimetro <- cut(
 
 zika_new <- droplevels(zika_new)
 str(zika_new)
-table(zika_new$gestacao.filho.classificacao)
+
+################################################################################
+# rodando padrões frequentes
+################################################################################
+
+#install.packages("arules")
+library(arules)
+
+ZikaTrans <- as(zika_new, "transactions")
+rules <- apriori(
+  ZikaTrans, 
+  parameter = list(
+    supp = 0.001, 
+    conf = 0.9, 
+    minlen = 2, 
+    maxlen = 5, 
+    target = "rules"
+  ), 
+  appearance = list(
+    rhs = c("gestacao.filho.microcefalia=Confirmado"),
+    default ="lhs"
+  ),
+  control = NULL
+)
+
+rules_a <- as(rules, "data.frame")
