@@ -24,7 +24,8 @@ zika_new <- data.frame(
   zika_old$ST_PRESENCA_EXANTEMA,
   zika_old$ST_PRESENCA_EXANTEMA,
   zika_old$ST_REALIZACAO_EXAME_TORSCH,
-  zika_old$ST_REALIZACAO_EXAME_DCZ
+  zika_old$ST_REALIZACAO_EXAME_DCZ,
+  zika_old$QT_TEMPO_GEST_DIAG_MICROCEFA
 )
 
 ################################################################################
@@ -52,7 +53,8 @@ colnames(zika_new) = c(
   "gestacao.doenca.exantema",
   "gestacao.doenca.exantema.trimestre",
   "gestacao.exame.torsch",
-  "gestacao.exame.dcz"
+  "gestacao.exame.dcz",
+  "gestacao.idade.gestacional"
 )
 
 ################################################################################
