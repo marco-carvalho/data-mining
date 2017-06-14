@@ -172,7 +172,7 @@ rules <- apriori(
     supp = 0.002,
     conf = 0.9, 
     minlen = 2, 
-    maxlen = 5,
+    maxlen = 14,
     target = "rules"
   ), 
   appearance = list(
