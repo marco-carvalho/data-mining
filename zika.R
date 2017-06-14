@@ -37,8 +37,8 @@ colnames(zika_new) = c(
   "mae.uf",
   "mae.municipio",
   "filho.sexo",
-  "filho.ano_nasc",
-  "filho.mes_nasc",
+  "filho.nasc.ano",
+  "filho.nasc.mes",
   "filho.peso",
   "filho.comprimento",
   "filho.cranio.perimetro",
@@ -61,45 +61,25 @@ colnames(zika_new) = c(
 # após isso, deve-se alterar o tipo dessa coluna para "numeric"
 ################################################################################
 
-zika_new$filho.comprimento <- as.numeric(sub(",", ".", zika_new$filho.comprimento))
-zika_new$filho.cranio.perimetro <- as.numeric(sub(",", ".", zika_new$filho.cranio.perimetro))
-zika_new$filho.cranio.diametro <- as.numeric(sub(",", ".", zika_new$filho.cranio.diametro))
-zika_new$filho.torax.perimetro <- as.numeric(sub(",", ".", zika_new$filho.torax.perimetro))
+x <- function(x) as.numeric(sub(",", ".", x))
 
-################################################################################
-# alguns registros das colunas que representam datas apresentavam inconsistência
-# a inconsistência era notada por alguns registros possuirem apenas 7 dígitos
-# o motivo disso era por conta do primeiro caractere ser "0"
-# para corrigir isso, deve-se adicionar um "0" para os registros com 7 dígitos
-# após isso, deve-se alterar o tipo dessa coluna para "date"
-################################################################################
-
-zika_new$filho.ano_nasc[which(nchar(zika_new$filho.ano_nasc) == 7)] <- paste(
-  "0", 
-  zika_new$filho.ano_nasc[which(nchar(zika_new$filho.ano_nasc) == 7)], 
-  sep = ""
-)
-zika_new$filho.ano_nasc <- as.Date(zika_new$filho.ano_nasc, "%d%m%Y")
-
-zika_new$filho.mes_nasc[which(nchar(zika_new$filho.mes_nasc) == 7)] <- paste(
-  "0", 
-  zika_new$filho.mes_nasc[which(nchar(zika_new$filho.mes_nasc) == 7)], 
-  sep = ""
-)
-zika_new$filho.mes_nasc <- as.Date(zika_new$filho.mes_nasc, "%d%m%Y")
+zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
+zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
+zika_new$filho.cranio.diametro <- x(zika_new$filho.cranio.diametro)
+zika_new$filho.torax.perimetro <- x(zika_new$filho.torax.perimetro)
 
 ################################################################################
 # pegando a parte do mês/ano para as respectivas colunas
 ################################################################################
 
-zika_new$filho.ano_nasc <- as.integer(substr(zika_new$filho.ano_nasc, 1, 4))
-zika_new$filho.mes_nasc <- as.integer(substr(zika_new$filho.mes_nasc, 6, 7))
+x <- function(x, start, end = 0) as.integer(substr(x, nchar(x)-start+1, nchar(x)-end))
 
-zika_new$gestacao.filho.microcefalia <- substr(
-  zika_new$gestacao.filho.microcefalia, 
-  4, 
-  nchar(as.character(zika_new$gestacao.filho.microcefalia))
-)
+zika_new$filho.nasc.ano <- x(zika_new$filho.nasc.ano, 4)
+zika_new$filho.nasc.mes <- x(zika_new$filho.nasc.mes, 6, 4)
+
+x <- function(x, start) substr(x, start, nchar(as.character(x)))
+
+zika_new$gestacao.filho.microcefalia <- x(zika_new$gestacao.filho.microcefalia, 4)
 
 ################################################################################
 # concatenando valores do campo "gestacao.filho.obito"
@@ -157,62 +137,26 @@ zika_new$mae.municipio <- as.factor(zika_new$mae.municipio)
 zika_new$gestacao.filho.microcefalia <- as.factor(zika_new$gestacao.filho.microcefalia)
 zika_new$gestacao.doenca.exantema <- as.factor(zika_new$gestacao.doenca.exantema)
 zika_new$gestacao.doenca.exantema.trimestre <- as.factor(zika_new$gestacao.doenca.exantema.trimestre)
-zika_new$filho.ano_nasc <- as.factor(zika_new$filho.ano_nasc)
-zika_new$filho.mes_nasc <- as.factor(zika_new$filho.mes_nasc)
+zika_new$filho.nasc.ano <- as.factor(zika_new$filho.nasc.ano)
+zika_new$filho.nasc.mes <- as.factor(zika_new$filho.nasc.mes)
 zika_new$gestacao.filho.classificacao <- as.factor(zika_new$gestacao.filho.classificacao)
-
 levels(zika_new$gestacao.filho.classificacao)[4] <- "A Termo"
 
-zika_new$mae.idade <- 
+x <- function(x) {
   ordered(
-    cut(
-      zika_new$mae.idade, 
-      c(0, 12, 18, 24, 65)
-    ), 
-    labels = c(
-      "Criança", 
-      "Adolescente", 
-      "Jovem-Adulto", 
-      "Adulto"
-    )
+    cut(x, c(boxplot(x)$stats[-3])), 
+    labels = c("Abaixo da Média", "Na Média", "Acima da Média")
   )
+}
 
-zika_new$filho.peso <- cut(
-  zika_new$filho.peso, 
-  hist(zika_new$filho.peso)$breaks,
-  dig.lab = 10
-)
-
-zika_new$filho.comprimento <- cut(
-  zika_new$filho.comprimento, 
-  hist(zika_new$filho.comprimento)$breaks,
-  dig.lab = 10
-)
-
-zika_new$filho.cranio.perimetro <- cut(
-  zika_new$filho.cranio.perimetro, 
-  hist(zika_new$filho.cranio.perimetro)$breaks,
-  dig.lab = 10
-)
-
-zika_new$filho.cranio.diametro <- cut(
-  zika_new$filho.cranio.diametro, 
-  hist(zika_new$filho.cranio.diametro)$breaks,
-  dig.lab = 10 
-)
-
-zika_new$filho.torax.perimetro <- cut(
-  zika_new$filho.torax.perimetro, 
-  hist(zika_new$filho.torax.perimetro)$breaks,
-  dig.lab = 10 
-)
-
-################################################################################
-# removendo conteúdo temporário
-################################################################################
+zika_new$mae.idade <- x(zika_new$mae.idade)
+zika_new$filho.peso <- x(zika_new$filho.peso)
+zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
+zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
+zika_new$filho.cranio.diametro <- x(zika_new$filho.cranio.diametro)
+zika_new$filho.torax.perimetro <- x(zika_new$filho.torax.perimetro)
 
 zika_new <- droplevels(zika_new)
-str(zika_new)
 
 ################################################################################
 # rodando padrões frequentes
@@ -225,10 +169,10 @@ ZikaTrans <- as(zika_new, "transactions")
 rules <- apriori(
   ZikaTrans, 
   parameter = list(
-    supp = 0.001, 
+    supp = 0.0025,
     conf = 0.9, 
     minlen = 2, 
-    maxlen = 5, 
+    maxlen = 21,
     target = "rules"
   ), 
   appearance = list(
@@ -239,3 +183,4 @@ rules <- apriori(
 )
 
 rules_a <- as(rules, "data.frame")
+rm(zika_old, i, x)
