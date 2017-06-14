@@ -2,7 +2,7 @@
 # criando DF com os dados do .csv selecionados para utilização
 ################################################################################
 
-zika_old = read.csv("linkage.csv", header = TRUE, sep = ";", fileEncoding = 'utf-8')
+zika_old = read.csv("/resources/data/linkage.csv", header = TRUE, sep = ";", fileEncoding = 'utf-8')
 zika_new <- data.frame(
   zika_old$NU_IDADE_GESTANTE,
   zika_old$CO_RACA_COR,
@@ -17,6 +17,7 @@ zika_new <- data.frame(
   zika_old$NU_DIAMETRO_CEFALICO,
   zika_old$NU_PERIMETRO_TORAXICO,
   zika_old$TP_GRAVIDEZ,
+  zika_old$QT_TEMPO_GEST_DIAG_MICROCEFA,
   zika_old$TP_CLASSIFICACAO_FETO_RN,
   zika_old$TP_CLASSIFICACAO_FINAL,
   zika_old$ST_OBITO,
@@ -45,6 +46,7 @@ colnames(zika_new) = c(
   "filho.cranio.diametro",
   "filho.torax.perimetro",
   "gestacao.tipo",
+  "gestacao.qtd_semanas",
   "gestacao.filho.classificacao",
   "gestacao.filho.microcefalia",
   "gestacao.filho.obito",
@@ -67,6 +69,7 @@ zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
 zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
 zika_new$filho.cranio.diametro <- x(zika_new$filho.cranio.diametro)
 zika_new$filho.torax.perimetro <- x(zika_new$filho.torax.perimetro)
+zika_new$gestacao.qtd_semanas <- x(zika_new$gestacao.qtd_semanas)
 
 ################################################################################
 # pegando a parte do mês/ano para as respectivas colunas
@@ -155,6 +158,7 @@ zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
 zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
 zika_new$filho.cranio.diametro <- x(zika_new$filho.cranio.diametro)
 zika_new$filho.torax.perimetro <- x(zika_new$filho.torax.perimetro)
+zika_new$gestacao.qtd_semanas <- x(zika_new$gestacao.qtd_semanas)
 
 zika_new <- droplevels(zika_new)
 
@@ -172,7 +176,7 @@ rules <- apriori(
     supp = 0.002,
     conf = 0.9, 
     minlen = 2, 
-    maxlen = 14,
+    maxlen = 9,
     target = "rules"
   ), 
   appearance = list(
