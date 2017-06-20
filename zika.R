@@ -63,32 +63,32 @@ colnames(zika_new) = c(
 # após isso, deve-se alterar o tipo dessa coluna para "numeric"
 ################################################################################
 
-x <- function(x) {
+sub_comma_dot <- function(x) {
   as.numeric(sub(",", ".", x))
 }
 
-zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
-zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
-zika_new$filho.cranio.diametro <- x(zika_new$filho.cranio.diametro)
-zika_new$filho.torax.perimetro <- x(zika_new$filho.torax.perimetro)
-zika_new$gestacao.qtd_semanas <- x(zika_new$gestacao.qtd_semanas)
+zika_new$filho.comprimento <- sub_comma_dot(zika_new$filho.comprimento)
+zika_new$filho.cranio.perimetro <- sub_comma_dot(zika_new$filho.cranio.perimetro)
+zika_new$filho.cranio.diametro <- sub_comma_dot(zika_new$filho.cranio.diametro)
+zika_new$filho.torax.perimetro <- sub_comma_dot(zika_new$filho.torax.perimetro)
+zika_new$gestacao.qtd_semanas <- sub_comma_dot(zika_new$gestacao.qtd_semanas)
 
 ################################################################################
 # pegando a parte do mês/ano para as respectivas colunas
 ################################################################################
 
-x <- function(x, start, end = 0) {
+substr_reverse <- function(x, start, end = 0) {
   as.integer(substr(x, nchar(x)-start+1, nchar(x)-end))
 }
 
-zika_new$filho.nasc.ano <- x(zika_new$filho.nasc.ano, 4)
-zika_new$filho.nasc.mes <- x(zika_new$filho.nasc.mes, 6, 4)
+zika_new$filho.nasc.ano <- substr_reverse(zika_new$filho.nasc.ano, 4)
+zika_new$filho.nasc.mes <- substr_reverse(zika_new$filho.nasc.mes, 6, 4)
 
-x <- function(x, start) {
+substr_from_x_to_end <- function(x, start) {
   substr(x, start, nchar(as.character(x)))
 }
 
-zika_new$gestacao.filho.microcefalia <- x(zika_new$gestacao.filho.microcefalia, 4)
+zika_new$gestacao.filho.microcefalia <- substr_from_x_to_end(zika_new$gestacao.filho.microcefalia, 4)
 
 ################################################################################
 # concatenando valores do campo "gestacao.filho.obito"
@@ -151,20 +151,20 @@ zika_new$filho.nasc.mes <- as.factor(zika_new$filho.nasc.mes)
 zika_new$gestacao.filho.classificacao <- as.factor(zika_new$gestacao.filho.classificacao)
 levels(zika_new$gestacao.filho.classificacao)[4] <- "A Termo"
 
-x <- function(x) {
+create_ranges <- function(x) {
   ordered(
     cut(x, c(boxplot(x)$stats[-3])), 
     labels = c("Abaixo da Média", "Na Média", "Acima da Média")
   )
 }
 
-zika_new$mae.idade <- x(zika_new$mae.idade)
-zika_new$filho.peso <- x(zika_new$filho.peso)
-zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
-zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
-zika_new$filho.cranio.diametro <- x(zika_new$filho.cranio.diametro)
-zika_new$filho.torax.perimetro <- x(zika_new$filho.torax.perimetro)
-zika_new$gestacao.qtd_semanas <- x(zika_new$gestacao.qtd_semanas)
+zika_new$mae.idade <- create_ranges(zika_new$mae.idade)
+zika_new$filho.peso <- create_ranges(zika_new$filho.peso)
+zika_new$filho.comprimento <- create_ranges(zika_new$filho.comprimento)
+zika_new$filho.cranio.perimetro <- create_ranges(zika_new$filho.cranio.perimetro)
+zika_new$filho.cranio.diametro <- create_ranges(zika_new$filho.cranio.diametro)
+zika_new$filho.torax.perimetro <- create_ranges(zika_new$filho.torax.perimetro)
+zika_new$gestacao.qtd_semanas <- create_ranges(zika_new$gestacao.qtd_semanas)
 
 zika_new <- droplevels(zika_new)
 
