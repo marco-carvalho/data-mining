@@ -2,7 +2,7 @@
 # criando DF com os dados do .csv selecionados para utilização
 ################################################################################
 
-zika_old = read.csv("/resources/data/linkage.csv", header = TRUE, sep = ";", fileEncoding = 'utf-8')
+zika_old = read.csv("linkage.csv", header = T, sep = ";", fileEncoding = 'utf-8')
 zika_new <- data.frame(
   zika_old$NU_IDADE_GESTANTE,
   zika_old$CO_RACA_COR,
@@ -63,7 +63,9 @@ colnames(zika_new) = c(
 # após isso, deve-se alterar o tipo dessa coluna para "numeric"
 ################################################################################
 
-x <- function(x) as.numeric(sub(",", ".", x))
+x <- function(x) {
+  as.numeric(sub(",", ".", x))
+}
 
 zika_new$filho.comprimento <- x(zika_new$filho.comprimento)
 zika_new$filho.cranio.perimetro <- x(zika_new$filho.cranio.perimetro)
@@ -75,12 +77,16 @@ zika_new$gestacao.qtd_semanas <- x(zika_new$gestacao.qtd_semanas)
 # pegando a parte do mês/ano para as respectivas colunas
 ################################################################################
 
-x <- function(x, start, end = 0) as.integer(substr(x, nchar(x)-start+1, nchar(x)-end))
+x <- function(x, start, end = 0) {
+  as.integer(substr(x, nchar(x)-start+1, nchar(x)-end))
+}
 
 zika_new$filho.nasc.ano <- x(zika_new$filho.nasc.ano, 4)
 zika_new$filho.nasc.mes <- x(zika_new$filho.nasc.mes, 6, 4)
 
-x <- function(x, start) substr(x, start, nchar(as.character(x)))
+x <- function(x, start) {
+  substr(x, start, nchar(as.character(x)))
+}
 
 zika_new$gestacao.filho.microcefalia <- x(zika_new$gestacao.filho.microcefalia, 4)
 
@@ -173,10 +179,9 @@ ZikaTrans <- as(zika_new, "transactions")
 rules <- apriori(
   ZikaTrans, 
   parameter = list(
-    supp = 0.002,
-    conf = 0.9, 
-    minlen = 2, 
-    maxlen = 9,
+    supp = 0.001,
+    maxlen = 22,
+    maxtime = 20,
     target = "rules"
   ), 
   appearance = list(
